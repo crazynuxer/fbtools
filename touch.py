@@ -45,16 +45,16 @@ class Touch():
                 # get array of supported keys
                 keys = (c_ubyte * 96)()
                 fcntl.ioctl(fd, EVIOCGBIT_EVKEY_96, keys, True)
-                if x.minimum == 0 and (x.maximum == width if width else x.maximum >= 64):
-                    if y.minimum == 0 and (y.maximum == height if height else y.maximum >= 64):
+                if x.minimum == 0 and (x.maximum + 1 == width if width else x.maximum >= 63):
+                    if y.minimum == 0 and (y.maximum + 1 == height if height else y.maximum >= 63):
                         for button in buttons:
                             if keys[button//8] & (1 << (button & 7)):
                                 # found a usable device
                                 self.fd = None
                                 self.device = td
                                 self.button = button
-                                self.width = x.maximum
-                                self.height = y.maximum
+                                self.width = x.maximum + 1
+                                self.height = y.maximum + 1
                                 self.scale_width = None  # these can be set later to scale the results
                                 self.scale_height = None
                                 return
